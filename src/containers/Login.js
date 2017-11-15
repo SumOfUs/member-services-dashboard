@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import AWS from 'aws-sdk'
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import config from "../config";
 import {
@@ -82,7 +81,6 @@ export default class Login extends Component {
           <Button
             block
             bsSize="large"
-            disabled={!this.validateForm()}
             type="submit"
           >
             Login
