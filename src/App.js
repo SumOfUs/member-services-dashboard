@@ -9,13 +9,16 @@ class App extends Component {
     super(props);
 
     this.state = {
-      isAuthenticated: false
+      isAuthenticated: false,
+      user: null
     };
   }
 
   async componentDidMount() {
     try {
-      if (await authUser()) {
+      const token = await authUser()
+      if (token) {
+        this.setState({ token: token });
         this.userHasAuthenticated(true);
       }
     }
@@ -44,6 +47,7 @@ class App extends Component {
         <Routes
           isAuthenticated={this.state.isAuthenticated}
           userHasAuthenticated={this.userHasAuthenticated}
+          token={this.state.token}
         />
       </div>
     );

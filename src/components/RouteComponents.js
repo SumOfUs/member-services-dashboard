@@ -9,10 +9,10 @@ export const AuthRoute = ({ userHasAuthenticated, isAuthenticated, Component, ..
   />
 );
 
-export const PrivateRoute = ({ isAuthenticated, Component, ...rest }) => (
+export const PrivateRoute = ({ token, isAuthenticated, Component, ...rest }) => (
   <Route {...rest}
     render={ () =>
-      isAuthenticated ? <Component /> : <Redirect to='/' />
+      isAuthenticated ? <Component token={token} /> : <Redirect to='/' />
     }
   />
 );

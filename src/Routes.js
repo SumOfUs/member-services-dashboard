@@ -19,6 +19,7 @@ export default (props) => (
        exact
        Component={Dashboard}
        isAuthenticated={props.isAuthenticated}
+       token={props.token}
      />
   </Switch>
 );

@@ -8,9 +8,8 @@ const authUser = async () => {
     return false;
   }
 
-  await getUserToken(currentUser);
-
-  return true;
+  const token = await getUserToken(currentUser);
+  return token;
 }
 
 const signOutUser = () => {

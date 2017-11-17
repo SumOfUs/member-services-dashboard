@@ -4,7 +4,7 @@ import { Button, FormGroup, FormControl } from "react-bootstrap";
 
 export default (props) => (
   <div className="SearchForm">
-    <form onSubmit={this.handleSubmit}>
+    <form onSubmit={props.handleSubmit}>
       <FormGroup controlId="email" bsSize="large">
         <FormControl
           autoFocus
