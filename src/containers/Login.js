@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import config from "../config";
+import FirstLoginForm from '../components/FirstLoginForm';
+import LoginForm from '../components/LoginForm';
 import {
   CognitoUserPool,
   AuthenticationDetails,
@@ -14,24 +15,55 @@ export default class Login extends Component {
 
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      firstLogin: false,
+      cognitoUser: null
     };
   }
 
-  login(email, password) {
-    const userPool = new CognitoUserPool({
+  getCognitoUser() {
+    if (this.state.cognitoUser) {
+      return this.state.cognitoUser;
+    } else {
+      let user = new CognitoUser({
+        Username : this.state.email.trim(),
+        Pool : this.getUserPool()
+      });
+
+      this.setState({cognitoUser: user});
+      return user;
+    }
+  }
+
+  getUserPool() {
+    return new CognitoUserPool({
       UserPoolId: config.cognito.USER_POOL_ID,
       ClientId: config.cognito.APP_CLIENT_ID
     });
+  }
 
-    const user = new CognitoUser({ Username: email, Pool: userPool });
+  login(email, password) {
+    let user = this.getCognitoUser();
+
     const authenticationData = { Username: email, Password: password };
     const authenticationDetails = new AuthenticationDetails(authenticationData);
+
+    if (this.state.firstLogin) {
+      return new Promise((resolve, reject) =>
+        user.completeNewPasswordChallenge(this.state.password, null, {
+          onSuccess: result => resolve(),
+          onFailure: err => reject(err)
+        })
+      )
+    }
 
     return new Promise((resolve, reject) =>
       user.authenticateUser(authenticationDetails, {
         onSuccess: result => resolve(),
-        onFailure: err => reject(err)
+        onFailure: err => reject(err),
+        newPasswordRequired: (userAttributes, requiredAttributes) => {
+          this.setState({firstLogin: true});
+        }
       })
     );
   }
@@ -61,30 +93,11 @@ export default class Login extends Component {
     return (
       <div className="Login">
         <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="email" bsSize="large">
-            <ControlLabel>Email</ControlLabel>
-            <FormControl
-              autoFocus
-              type="email"
-              value={this.state.email}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-          <FormGroup controlId="password" bsSize="large">
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
-              value={this.state.password}
-              onChange={this.handleChange}
-              type="password"
-            />
-          </FormGroup>
-          <Button
-            block
-            bsSize="large"
-            type="submit"
-          >
-            Login
-          </Button>
+        {
+          this.state.firstLogin ?
+          <FirstLoginForm {...this.state} handleChange={this.handleChange} /> :
+          <LoginForm {...this.state} handleChange={this.handleChange} />
+        }
         </form>
       </div>
     );
