@@ -8,7 +8,7 @@ export default (props) => (
       <FormGroup controlId="email" bsSize="large">
         <FormControl
           autoFocus
-          type="email"
+          type="text"
           value={props.email}
           placeholder="Search by Email"
           onChange={props.handleChange}
