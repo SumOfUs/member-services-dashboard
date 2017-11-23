@@ -1,5 +1,5 @@
-import { CognitoUserPool } from "amazon-cognito-identity-js";
-import config from "../config";
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import config from '../config';
 
 const authUser = async () => {
   const currentUser = getCurrentUser();
@@ -10,7 +10,7 @@ const authUser = async () => {
 
   const token = await getUserToken(currentUser);
   return token;
-}
+};
 
 const signOutUser = () => {
   const currentUser = getCurrentUser();
@@ -18,7 +18,7 @@ const signOutUser = () => {
   if (currentUser !== null) {
     currentUser.signOut();
   }
-}
+};
 
 export { authUser, signOutUser };
 
@@ -33,12 +33,12 @@ const getUserToken = currentUser => {
       resolve(session.getIdToken().getJwtToken());
     });
   });
-}
+};
 
 const getCurrentUser = () => {
   const userPool = new CognitoUserPool({
     UserPoolId: config.cognito.USER_POOL_ID,
-    ClientId: config.cognito.APP_CLIENT_ID
+    ClientId: config.cognito.APP_CLIENT_ID,
   });
   return userPool.getCurrentUser();
-}
+};
