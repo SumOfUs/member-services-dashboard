@@ -1,0 +1,13 @@
+.Logo {
+  display: inline-block;
+  background-image: url('https://www.sumofus.org/images/sou-plus-9ae2b5ea.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position-x: 1em;
+}
+
+.Logo-title {
+  font-weight: bold;
+  margin-left: 3em;
+  display: block;
+}

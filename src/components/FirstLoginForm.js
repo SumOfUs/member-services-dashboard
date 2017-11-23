@@ -1,23 +1,21 @@
-import React from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import React from 'react';
 
-export default (props) => (
-  <div>
-    <FormGroup controlId="password" bsSize="large">
-      <ControlLabel>Almost there. You just need to change your password...</ControlLabel>
-      <FormControl
+export default props => (
+  <div className="container">
+    <div className="form-group" controlId="password" bsSize="large">
+      <label htmlFor="new-password">
+        Almost there. You just need to change your password...
+      </label>
+      <input
+        id="new-password"
         placeholder="Please change your password"
         value={props.password}
         onChange={props.handleChange}
         type="password"
       />
-    </FormGroup>
-    <Button
-      block
-      bsSize="large"
-      type="submit"
-    >
+    </div>
+    <button className="btn btn-primary" bsSize="large" type="submit">
       Change
-    </Button>
+    </button>
   </div>
-)
+);

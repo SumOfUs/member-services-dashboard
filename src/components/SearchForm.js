@@ -1,26 +1,27 @@
 import React from 'react';
-import "./SearchForm.css";
-import { Button, FormGroup, FormControl } from "react-bootstrap";
+import './SearchForm.css';
 
-export default (props) => (
+export default props => (
   <div className="SearchForm">
     <form onSubmit={props.handleSubmit}>
-      <FormGroup controlId="email" bsSize="large">
-        <FormControl
+      <div className="form-group">
+        <input
+          id="email"
+          type="email"
           autoFocus
-          type="text"
           value={props.email}
           placeholder="Search by Email"
           onChange={props.handleChange}
         />
-      </FormGroup>
-      <Button
+      </div>
+      <button
+        className="btn btn-primary btn-large"
         block
         bsSize="large"
         type="submit"
       >
         Search
-      </Button>
+      </button>
     </form>
   </div>
 );
