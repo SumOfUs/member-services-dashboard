@@ -1,53 +1,55 @@
 import React, { Component } from 'react';
-import { authUser, signOutUser } from './libs/awsLib';
-import Routes from './Routes';
-import Header from './containers/Header';
+import { connect } from 'react-redux';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { authUser } from './libs/awsLib';
+import { rehydrate } from './redux/auth';
+
+import LoadingScreen from './components/LoadingScreen';
+import AuthenticatedRoute from './components/AuthenticatedRoute';
+import Login from './containers/Login';
+import MemberProfile from './containers/MemberProfile';
+import MemberSearch from './containers/MemberSearch';
+
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      isAuthenticated: false,
-      user: null,
+      loading: true,
     };
   }
-
   async componentDidMount() {
     try {
-      const token = await authUser();
-      if (token) {
-        this.setState({ token: token });
-        this.userHasAuthenticated(true);
-      }
+      const data = await authUser();
+      this.props.rehydrate(data);
+      this.setState({ loading: false });
     } catch (e) {
-      alert(e);
+      console.error(e);
     }
   }
 
-  userHasAuthenticated = authenticated => {
-    this.setState({ isAuthenticated: authenticated });
-  };
-
-  handleLogout = event => {
-    signOutUser();
-    this.userHasAuthenticated(false);
-  };
-
   render() {
-    const { isAuthenticated, token } = this.state;
+    if (this.state.loading) {
+      return <LoadingScreen />;
+    }
     return (
-      <div className="App">
-        <Header />
-        <Routes
-          isAuthenticated={isAuthenticated}
-          userHasAuthenticated={this.userHasAuthenticated}
-          token={token}
-        />
-      </div>
+      <BrowserRouter>
+        <div className="App">
+          <Route path="/login" exact component={Login} />
+          <AuthenticatedRoute exact path="/" component={MemberSearch} />
+          <AuthenticatedRoute path="/member/:id" component={MemberProfile} />
+        </div>
+      </BrowserRouter>
     );
   }
 }
 
-export default App;
+export default connect(
+  state => ({
+    token: state.auth.token,
+  }),
+  dispatch => ({
+    rehydrate: user => dispatch(rehydrate(user)),
+  })
+)(App);

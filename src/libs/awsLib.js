@@ -1,4 +1,5 @@
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import reduce from 'lodash/reduce';
 import config from '../config';
 
 const authUser = async () => {
@@ -8,10 +9,28 @@ const authUser = async () => {
     return false;
   }
 
-  const token = await getUserToken(currentUser);
-  return token;
+  try {
+    const token = await getUserToken(currentUser);
+    const attrs = await getUserAttributes(currentUser);
+    const user = reduce(
+      attrs,
+      (result, { Name, Value }) => ({ ...result, [Name]: Value }),
+      {}
+    );
+    return { token, user };
+  } catch (e) {
+    console.log('exception:', e);
+  }
 };
 
+const getUserAttributes = user => {
+  return new Promise((resolve, reject) => {
+    user.getUserAttributes((err, data) => {
+      if (err) return reject(err);
+      return resolve(data);
+    });
+  });
+};
 const signOutUser = () => {
   const currentUser = getCurrentUser();
 

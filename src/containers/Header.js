@@ -1,13 +1,16 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Logo from '../components/Logo/Logo';
 import Gravatar from 'react-gravatar';
 import { Hero } from 'reactbulma';
+import Logo from '../components/Logo/Logo';
+import { logout } from '../redux/auth';
+import './Header.css';
 
-export default class Header extends PureComponent {
+export class Header extends PureComponent {
   render() {
     return (
-      <header className="hero">
+      <header className="Header hero">
         <Hero.Head>
           <nav id="navbar" className="navbar has-shadow">
             <div className="navbar-brand">
@@ -18,10 +21,12 @@ export default class Header extends PureComponent {
             <div className="navbar-menu navbar-end">
               <div className="navbar-item has-dropdown is-hoverable">
                 <a className="navbar-link">
-                  <Gravatar email="vincent@sumofus.org" size={32} />
+                  <Gravatar email={this.props.email} size={32} />
                 </a>
                 <div className="navbar-dropdown is-right">
-                  <a className="navbar-item">Logout</a>
+                  <a className="navbar-item" onClick={this.props.logout}>
+                    Logout
+                  </a>
                 </div>
               </div>
             </div>
@@ -31,3 +36,12 @@ export default class Header extends PureComponent {
     );
   }
 }
+
+export default connect(
+  state => ({
+    email: state.auth.user.email,
+  }),
+  dispatch => ({
+    logout: () => dispatch(logout()),
+  })
+)(Header);

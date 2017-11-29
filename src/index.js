@@ -1,26 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import './index.css';
+import { Provider } from 'react-redux';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import './index.css';
+import { configureStore } from './redux/configureStore';
+
+const store = configureStore();
 
 function render(Component = App) {
   ReactDOM.render(
-    <Router>
+    <Provider store={store}>
       <Component />
-    </Router>,
+    </Provider>,
     document.getElementById('root')
   );
 }
 
 if (module.hot) {
-  module.hot.accept('./App', () => {
-    const NextApp = require('./App').default;
-    render(NextApp);
-  });
+  module.hot.accept('./App', () => render(require('./App').default));
 }
 
-render();
-
+render(App);
 registerServiceWorker();
