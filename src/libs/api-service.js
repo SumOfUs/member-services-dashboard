@@ -25,6 +25,18 @@ export default class ApiService {
       .then(response => response.data.objects);
   }
 
+  cancelSubscription(provider, id) {
+    const path = `/payments-service/${provider}/subscriptions/${id}`;
+
+    return this.client.delete(path).then(
+      s => console.log(s),
+      error => {
+        console.error(error);
+        return error;
+      }
+    );
+  }
+
   updateMember(id, attrs) {
     return this.client.put(`/members/${id}/`, attrs).then(
       s => console.log(s),
