@@ -5,9 +5,15 @@ import Gravatar from 'react-gravatar';
 import { Hero } from 'reactbulma';
 import Logo from '../components/Logo/Logo';
 import { logout } from '../redux/auth';
+import { signOutUser } from '../libs/awsLib';
 import './Header.css';
 
 export class Header extends PureComponent {
+  logout() {
+    signOutUser();
+    this.props.logout();
+  }
+
   render() {
     return (
       <header className="Header hero">
@@ -24,7 +30,7 @@ export class Header extends PureComponent {
                   <Gravatar email={this.props.email} size={32} />
                 </a>
                 <div className="navbar-dropdown is-right">
-                  <a className="navbar-item" onClick={this.props.logout}>
+                  <a className="navbar-item" onClick={this.logout.bind(this)}>
                     Logout
                   </a>
                 </div>
