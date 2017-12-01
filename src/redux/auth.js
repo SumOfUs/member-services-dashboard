@@ -12,7 +12,7 @@ const AUTH_LOGOUT = '@app:auth:logout';
 
 const setAuth = (state, action) => ({
   ...state,
-  token: action.tokens.accesToken.jwtToken,
+  token: action.tokens.accessToken.jwtToken,
 });
 const unsetAuth = () => initialState;
 const authRehydrate = (state, action) => ({
