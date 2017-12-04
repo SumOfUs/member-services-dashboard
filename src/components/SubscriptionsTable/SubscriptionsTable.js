@@ -1,35 +1,36 @@
 import React, { Component } from 'react';
-import classnames from 'classnames';
 import { connect } from 'react-redux';
-import ApiService from '../libs/api-service';
+import ApiService from '../../libs/api-service';
+import CancelSubscriptionButton from './CancelSubscriptionButton';
 
 export class SubscriptionsTable extends Component {
   constructor(props) {
     super(props);
     this.api = new ApiService({ token: this.props.token });
+
     this.state = {
-      cancellingSubscription: false,
+      cancellingSubscriptionId: null,
     };
   }
 
   onCancelSubscription(subscription) {
-    this.setState(state => ({ ...state, cancellingSubscription: true }));
+    this.setState(state => ({
+      ...state,
+      cancellingSubscriptionId: subscription.id,
+    }));
+
     this.api
       .cancelSubscription(subscription.provider, subscription.id)
       .then(
-        success => console.log('Cancel Subscription'),
+        success => this.props.handleCancelledSubscription(subscription),
         error => console.error('ERROR UPDATING', error)
       )
       .then(() =>
-        this.setState(state => ({ ...state, cancellingSubscription: false }))
+        this.setState(state => ({ ...state, cancellingSubscriptionId: null }))
       );
   }
 
   render() {
-    const buttonClasses = classnames('button is-danger is-small', {
-      'is-loading': this.state.cancellingSubscription,
-    });
-
     return (
       <table className="table is-striped is-fullwidth">
         <thead>
@@ -54,13 +55,15 @@ export class SubscriptionsTable extends Component {
                 <td> {subscription.price} </td>
                 <td> {subscription.status} </td>
                 <td>
-                  <button
-                    className={buttonClasses}
-                    disabled={this.state.cancellingSubscription}
-                    onClick={this.onCancelSubscription.bind(this, subscription)}
-                  >
-                    Cancel
-                  </button>
+                  {subscription.status === 'Active' && (
+                    <CancelSubscriptionButton
+                      subscription={subscription}
+                      handleClick={this.onCancelSubscription.bind(this)}
+                      cancellingSubscriptionId={
+                        this.state.cancellingSubscriptionId
+                      }
+                    />
+                  )}
                 </td>
               </tr>
             );

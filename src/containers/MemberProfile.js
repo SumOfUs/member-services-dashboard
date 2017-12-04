@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Header from './Header';
 import Box from '../components/Box';
 import MemberEdit from '../components/MemberEdit';
-import SubscriptionsTable from '../components/SubscriptionsTable';
+import SubscriptionsTable from '../components/SubscriptionsTable/SubscriptionsTable';
 import CustomersTable from '../components/CustomersTable';
 import CreditCardsTable from '../components/CreditCardsTable';
 import PaypalAccountsTable from '../components/PaypalAccountsTable';
@@ -32,6 +32,22 @@ export default class MemberProfile extends Component {
         this.fetchBraintreeData();
       })
       .catch(err => console.debug('Whoops!', err));
+  }
+
+  handleCancelledSubscription(cancelledSubscription) {
+    this.setState(prevState => {
+      const subscriptions = prevState.subscriptions.map(subscription => {
+        if (subscription.id === cancelledSubscription.id)
+          subscription.status = 'Canceled';
+
+        return subscription;
+      });
+
+      return {
+        ...prevState,
+        subscriptions: subscriptions,
+      };
+    });
   }
 
   fetchBraintreeData() {
@@ -83,7 +99,12 @@ export default class MemberProfile extends Component {
           </Box>
           <Box className="MemberProfile-section">
             <h3> Subscriptions </h3>
-            <SubscriptionsTable subscriptions={this.state.subscriptions} />
+            <SubscriptionsTable
+              handleCancelledSubscription={this.handleCancelledSubscription.bind(
+                this
+              )}
+              subscriptions={this.state.subscriptions}
+            />
           </Box>
           <Box className="MemberProfile-section">
             <h3> Credit Cards </h3>
