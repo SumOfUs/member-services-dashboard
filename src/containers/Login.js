@@ -23,6 +23,10 @@ export class Login extends Component {
     this.setState(prev => ({ ...prev, ...data }));
   };
 
+  onNewPasswordRequired = user => {
+    this.setState(prev => ({ ...prev, user, newPasswordRequired: true }));
+  };
+
   validEmail() {
     if (isEmail(this.state.email)) return this.state.email;
     return '';
@@ -33,12 +37,7 @@ export class Login extends Component {
 
     if (this.props.token) {
       const to = this.props.location.state || { pathname: '/' };
-      console.log('redirecting to:', to);
       return <Redirect to={to} />;
-    }
-
-    if (newPasswordRequired) {
-      return <NewPassword onSuccess={this.props.loginSuccess} />;
     }
 
     return (
@@ -57,11 +56,17 @@ export class Login extends Component {
                     <Gravatar email={this.validEmail()} size={128} />
                   </figure>
                   {newPasswordRequired ? (
-                    <NewPassword onSuccess={this.props.loginSuccess} />
+                    <NewPassword
+                      user={this.state.user}
+                      onSuccess={this.props.loginSuccess}
+                    />
                   ) : (
                     <LoginForm
                       onSuccess={this.props.loginSuccess}
                       onFailure={this.props.loginFailure}
+                      onNewPasswordRequired={this.onNewPasswordRequired.bind(
+                        this
+                      )}
                       onChange={this.onChange}
                       email={email}
                       password={password}

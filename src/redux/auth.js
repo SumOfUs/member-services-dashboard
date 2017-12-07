@@ -9,6 +9,7 @@ const AUTH_REHYDRATE = '@app:auth:rehydrate';
 const AUTH_SUCCESS = '@app:auth:success';
 const AUTH_FAILURE = '@app:auth:failure';
 const AUTH_LOGOUT = '@app:auth:logout';
+const AUTH_NEW_PASSWORD_REQUIRED = '@app:auth:new_password_required';
 
 const setAuth = (state, action) => ({
   ...state,
@@ -48,6 +49,13 @@ export function loginFailure(error) {
   return {
     type: AUTH_FAILURE,
     error,
+  };
+}
+
+export function newPasswordRequired() {
+  return {
+    type: AUTH_NEW_PASSWORD_REQUIRED,
+    newPasswordRequired: true,
   };
 }
 

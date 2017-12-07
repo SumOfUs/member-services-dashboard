@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { completeNewPasswordChallenge } from '../libs/auth-service';
+import { Redirect } from 'react-router-dom';
 
 export default class NewPassword extends PureComponent {
   constructor(props) {
@@ -12,37 +13,42 @@ export default class NewPassword extends PureComponent {
   }
 
   onChange = event => {
-    this.setState(prev => ({ ...prev, newPasword: event.target.value }));
+    let newPassword = event.target.value;
+    this.setState(prev => ({ ...prev, newPassword }));
   };
 
-  onSubmit = () => {
-    console.log('new password:', this.state.newPassword);
-    completeNewPasswordChallenge();
+  onSubmit = e => {
+    e.preventDefault();
+    completeNewPasswordChallenge(this.props.user, this.state.newPassword).then(
+      resp => {
+        return <Redirect to="/" />;
+      }
+    );
   };
 
   render() {
     const { newPassword, error } = this.state;
     return (
-      <div className="NewPassword container">
-        <form onSubmit={this.onSubmit}>
-          <div className="form-group">
+      <form onSubmit={this.onSubmit} className="form">
+        <div className="field">
+          <div className="control">
             <label htmlFor="new-password">
               Almost there. You just need to change your password...
             </label>
             <input
-              id="new-password"
+              className="input is-large"
               placeholder="Please change your password"
               value={newPassword}
-              onChange={this.onChange}
+              onChange={this.onChange.bind(this)}
               type="password"
             />
             {error && <p className="has-text-warning">{error}</p>}
           </div>
-          <button className="button is-primary is-large" type="submit">
-            Change password
-          </button>
-        </form>
-      </div>
+        </div>
+        <button className="button is-primary is-large" type="submit">
+          Change password
+        </button>
+      </form>
     );
   }
 }

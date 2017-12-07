@@ -50,6 +50,7 @@ export function authenticate(user, details) {
           newPasswordRequired: true,
           userAttributes,
           requiredAttributes,
+          user,
         });
       },
     });
@@ -57,12 +58,12 @@ export function authenticate(user, details) {
 }
 
 export function completeNewPasswordChallenge(user, newPassword) {
-  return new Promise((onSuccess, onFailure) =>
+  return new Promise((resolve, reject) => {
     user.completeNewPasswordChallenge(newPassword, null, {
-      onSuccess,
-      onFailure,
-    })
-  );
+      onSuccess: resp => resolve(resp),
+      onFailure: err => reject(err),
+    });
+  });
 }
 
 export function login(username, password) {
