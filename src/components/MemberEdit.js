@@ -33,13 +33,12 @@ export class MemberEdit extends Component {
 
   unsubscribeMember(e) {
     e.preventDefault();
-
-    post('https://act.sumofus.org/rest/v1/action/', {
-      page: 'unsubscribe',
-      email: this.props.member.email,
-    })
-      .then(resp => console.log(resp))
-      .catch(err => console.log(err));
+    this.api
+      .unsubscribeMember(this.props.member.email)
+      .then(
+        success => console.log('UNSUBSCRIBED MEMBER'),
+        error => console.error('ERROR UNSUBSCRIBING', error)
+      );
   }
 
   onSubmit = event => {

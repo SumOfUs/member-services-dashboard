@@ -50,4 +50,10 @@ export default class ApiService {
   fetchBraintreeData(member) {
     return this.client.get(`/members/`);
   }
+
+  unsubscribeMember(email) {
+    return this.client
+      .post('/members/unsubscribe', { email: email })
+      .then(response => response.data.objects);
+  }
 }
