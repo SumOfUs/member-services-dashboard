@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { post } from 'axios';
 import classnames from 'classnames';
 import ApiService from '../libs/api-service';
 import SelectCountry from '../components/SelectCountry';

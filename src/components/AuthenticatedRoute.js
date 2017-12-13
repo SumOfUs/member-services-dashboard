@@ -20,13 +20,11 @@ export class AuthenticatedRoute extends PureComponent {
   }
 
   render() {
-    console.log('Authenticated route', this.props);
     const { component: Component, token, ...rest } = this.props;
     return (
       <Route
         {...rest}
         render={props => {
-          console.log('Rendering route', props);
           return this.renderSwitch(props);
         }}
       />
