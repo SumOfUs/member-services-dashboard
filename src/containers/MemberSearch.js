@@ -65,7 +65,6 @@ export class MemberSearch extends Component {
                 <p className="is-loading has-text-centered">Searching...</p>
               )}
               {map(this.props.members, member => {
-                console.log('rendering member:', member);
                 return <MemberCard key={member.id} member={member} />;
               })}
             </div>

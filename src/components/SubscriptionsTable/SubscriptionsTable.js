@@ -52,10 +52,10 @@ export class SubscriptionsTable extends Component {
                     subscription.provider.slice(1)}{' '}
                 </td>
                 <td> {subscription.createdAt} </td>
-                <td> {subscription.price} </td>
+                <td> {subscription.amount} </td>
                 <td> {subscription.status} </td>
                 <td>
-                  {subscription.status === 'Active' && (
+                  {subscription.status === 'active' && (
                     <CancelSubscriptionButton
                       subscription={subscription}
                       handleClick={this.onCancelSubscription.bind(this)}

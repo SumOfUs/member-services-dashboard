@@ -27,6 +27,10 @@ export function getBraintreeData(email) {
   return http.get('members/braintree_data', { params: { email } });
 }
 
+export function getGoCardlessSubscriptions(memberId) {
+  return http.get(`members/${memberId}/gocardless_subscriptions`);
+}
+
 export function getMember(id) {
   return http.get(`members/${id}`);
 }

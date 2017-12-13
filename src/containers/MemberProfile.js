@@ -6,7 +6,11 @@ import SubscriptionsTable from '../components/SubscriptionsTable/SubscriptionsTa
 import CustomersTable from '../components/CustomersTable';
 import CreditCardsTable from '../components/CreditCardsTable';
 import PaypalAccountsTable from '../components/PaypalAccountsTable';
-import { getBraintreeData, getMember } from '../libs/backendClient';
+import {
+  getBraintreeData,
+  getGoCardlessSubscriptions,
+  getMember,
+} from '../libs/backendClient';
 
 import './MemberProfile.css';
 
@@ -30,6 +34,7 @@ export default class MemberProfile extends Component {
           return { ...prevState, member: data };
         });
         this.fetchBraintreeData();
+        this.fetchGocardlessSubscriptions();
       })
       .catch(err => console.debug('Whoops!', err));
   }
@@ -69,6 +74,21 @@ export default class MemberProfile extends Component {
           );
           prevState.customers = prevState.customers.concat(data.customers);
           prevState.braintreeDataFetched = true;
+          return prevState;
+        });
+      })
+      .catch(error => {
+        console.log('Something went wrong: ', error);
+      });
+  }
+
+  fetchGocardlessSubscriptions() {
+    getGoCardlessSubscriptions(this.props.match.params.id)
+      .then(subscriptions => {
+        this.setState(prevState => {
+          prevState.subscriptions = prevState.subscriptions.concat(
+            subscriptions
+          );
           return prevState;
         });
       })
