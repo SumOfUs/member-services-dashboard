@@ -11,7 +11,7 @@ export const AuthRoute = ({
     {...rest}
     render={() =>
       isAuthenticated ? (
-        <Redirect to="/dashboard" />
+        <Redirect to="/" />
       ) : (
         <Component userHasAuthenticated={userHasAuthenticated} />
       )
@@ -27,6 +27,7 @@ export const PrivateRoute = ({
 }) => {
   return (
     <Route
+      exact
       {...rest}
       render={({ match }) =>
         isAuthenticated ? (

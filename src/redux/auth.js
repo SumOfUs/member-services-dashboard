@@ -11,10 +11,14 @@ const AUTH_FAILURE = '@app:auth:failure';
 const AUTH_LOGOUT = '@app:auth:logout';
 const AUTH_NEW_PASSWORD_REQUIRED = '@app:auth:new_password_required';
 
-const setAuth = (state, action) => ({
-  ...state,
-  token: action.tokens.accessToken.jwtToken,
-});
+const setAuth = (state, action) => {
+  return {
+    ...state,
+    token: action.tokens.token.accessToken.jwtToken,
+    user: action.tokens.user_attributes,
+  };
+};
+
 const unsetAuth = () => initialState;
 const authRehydrate = (state, action) => ({
   token: action.token,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { authUser } from './libs/awsLib';
 import { rehydrate } from './redux/auth';
 
@@ -36,9 +36,11 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="App">
-          <Route path="/login" exact component={Login} />
-          <AuthenticatedRoute exact path="/" component={MemberSearch} />
-          <AuthenticatedRoute path="/member/:id" component={MemberProfile} />
+          <Switch>
+            <Route exact={true} path="/login" exact component={Login} />
+            <AuthenticatedRoute exact path="/" component={MemberSearch} />
+            <AuthenticatedRoute path="/member/:id" component={MemberProfile} />
+          </Switch>
         </div>
       </BrowserRouter>
     );
