@@ -34,11 +34,14 @@ export class Login extends Component {
 
   render() {
     const { email, password, newPasswordRequired } = this.state;
-
     if (this.props.token) {
-      const to = this.props.location.state || { pathname: '/' };
-      return <Redirect to={to} />;
+      console.log('logged in', this.props.token);
+      return <Redirect to="/" />;
     }
+    // if (this.props.token) {
+    //   const to = this.props.location.state || { pathname: '/' };
+    //   return <Redirect to={to} />;
+    // }
 
     return (
       <section className="Login hero is-fullheight">

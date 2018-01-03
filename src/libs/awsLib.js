@@ -23,7 +23,7 @@ const authUser = async () => {
   }
 };
 
-const getUserAttributes = user => {
+const getUserAttributes = async user => {
   return new Promise((resolve, reject) => {
     user.getUserAttributes((err, data) => {
       if (err) return reject(err);
@@ -39,7 +39,7 @@ const signOutUser = () => {
   }
 };
 
-export { authUser, signOutUser };
+export { authUser, signOutUser, getUserAttributes };
 
 const getUserToken = currentUser => {
   return new Promise((resolve, reject) => {

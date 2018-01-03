@@ -43,7 +43,11 @@ export function getUserAttributes(user) {
 export function authenticate(user, details) {
   return new Promise((resolve, reject) => {
     user.authenticateUser(details, {
-      onSuccess: resolve,
+      onSuccess: data => {
+        getUserAttributes(user).then(attr => {
+          resolve({ user_attributes: attr, token: data });
+        });
+      },
       onFailure: reject,
       newPasswordRequired: (userAttributes, requiredAttributes) => {
         resolve({
@@ -75,6 +79,7 @@ export function login(username, password) {
     const pool = getUserPool();
 
     const user = getCognitoUser({ username, pool });
+
     return authenticate(user, credentials)
       .then(onLoginSuccess, onLoginFailure)
       .then(resolve, reject);
@@ -82,7 +87,7 @@ export function login(username, password) {
 }
 
 export function onLoginSuccess(data) {
-  console.log('onLoginSuccess:', data);
+  console.log('login success:', data);
   return Promise.resolve(data);
 }
 
