@@ -18,7 +18,8 @@ else
   exit 1
 fi
 
-yarn build
+CI=true yarn build
+
 
 echo "###################################"
 echo "Deploying static assets to ${ENV}..."
