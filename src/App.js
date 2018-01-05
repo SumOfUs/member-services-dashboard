@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { authUser } from './libs/awsLib';
 import { rehydrate } from './redux/auth';
-
+import { ToastContainer } from 'react-toastify';
 import LoadingScreen from './components/LoadingScreen';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import Login from './containers/Login';
@@ -17,6 +17,7 @@ class App extends Component {
     super(props);
     this.state = {
       loading: true,
+      componentError: false,
     };
   }
   async componentDidMount() {
@@ -29,13 +30,23 @@ class App extends Component {
     }
   }
 
+  componentDidCatch(error, info) {
+    this.setState({ componentError: true });
+    console.log('App component caught an error', error);
+    console.log('Error info:', info);
+  }
+
   render() {
+    if (this.state.componentError) {
+      return <p>Error</p>;
+    }
     if (this.state.loading) {
       return <LoadingScreen />;
     }
     return (
       <BrowserRouter>
         <div className="App">
+          <ToastContainer autoClose={8000} />
           <Switch>
             <Route path="/login" exact component={Login} />
             <AuthenticatedRoute exact path="/" component={MemberSearch} />
