@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { authUser } from './libs/awsLib';
 import { rehydrate } from './redux/auth';
 import { ToastContainer } from 'react-toastify';
+
 import LoadingScreen from './components/LoadingScreen';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
 import Login from './containers/Login';
@@ -46,7 +47,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="App">
-          <ToastContainer autoClose={8000} />
+          <ToastContainer autoClose={4000} />
           <Switch>
             <Route path="/login" exact component={Login} />
             <AuthenticatedRoute exact path="/" component={MemberSearch} />

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { toast } from 'react-toastify';
 import ApiService from '../libs/api-service';
 import SelectCountry from '../components/SelectCountry';
 
@@ -32,7 +33,7 @@ export class MemberEdit extends Component {
       .then(() => this.setState(state => ({ ...state, updating: false })));
   }
 
-  unsubscribeMember(e) {
+  unsubscribeMember = e => {
     e.preventDefault();
     this.api
       .unsubscribeMember(this.props.member.email)
@@ -40,7 +41,7 @@ export class MemberEdit extends Component {
         success => console.log('UNSUBSCRIBED MEMBER'),
         error => console.error('ERROR UNSUBSCRIBING', error)
       );
-  }
+  };
 
   onSubmit = event => {
     event.preventDefault();
@@ -67,13 +68,6 @@ export class MemberEdit extends Component {
   render() {
     const { member } = this.props;
     const { updatedMember, updating, unsubscribing } = this.state;
-    const updateButtonClasses = classnames('button is-primary', {
-      'is-loading': updating,
-    });
-
-    const unsubscribeButtonClasses = classnames('button is-primary', {
-      'is-loading': unsubscribing,
-    });
 
     return (
       <div className="MemberEdit is-clearfix">
@@ -156,20 +150,26 @@ export class MemberEdit extends Component {
             </div>
           </div>
 
+          <div className="buttons is-pulled-left">
+            <button
+              onClick={this.unsubscribeMember}
+              className={classnames('button is-danger', {
+                'is-loading': unsubscribing,
+              })}
+              disabled={unsubscribing}
+            >
+              Unsubscribe
+            </button>
+          </div>
           <div className="buttons is-pulled-right">
             <button
-              className={updateButtonClasses}
+              className={classnames('button is-primary', {
+                'is-loading': updating,
+              })}
               type="submit"
               disabled={updating}
             >
               Update
-            </button>
-            <button
-              onClick={this.unsubscribeMember.bind(this)}
-              className={unsubscribeButtonClasses}
-              disabled={unsubscribing}
-            >
-              Unsubscribe
             </button>
           </div>
         </form>
