@@ -11,14 +11,22 @@ export class MemberEdit extends Component {
     this.api = new ApiService({ token: this.props.token });
     this.state = {
       updating: false,
-      updatedMember: {
-        email: this.props.member.email,
-      },
+      unsubscribing: false,
+      updatedMember: {},
     };
   }
 
   componentWillReceiveProps(newProps) {
     this.api = new ApiService({ token: newProps.token || this.props.token });
+  }
+
+  subscribed() {
+    const member = this.props.member;
+    return member && member.subscription_status === 'subscribed';
+  }
+
+  updatedAttrs() {
+    return Object.keys(this.state.updatedMember);
   }
 
   updateMember() {
@@ -27,26 +35,33 @@ export class MemberEdit extends Component {
     this.api
       .updateMember(member.id, this.state.updatedMember)
       .then(
-        success => console.log('UPDATED MEMBER'),
-        error => console.error('ERROR UPDATING', error)
+        () => toast.success('Member updated successfully'),
+        () => toast.error('Error updating member')
       )
-      .then(() => this.setState(state => ({ ...state, updating: false })));
+      .then(() => this.setState({ updating: false, updatedMember: {} }));
   }
 
   unsubscribeMember = e => {
     e.preventDefault();
+    this.setState({ unsubscribing: true });
     this.api
       .unsubscribeMember(this.props.member.email)
       .then(
-        success => console.log('UNSUBSCRIBED MEMBER'),
-        error => console.error('ERROR UNSUBSCRIBING', error)
-      );
+        success => {
+          toast.success('Member unsubscribed successfully.');
+          this.setState({ unsubscribing: false });
+        },
+        error => {
+          toast.error('There was an error unsubscribing the member.');
+          console.log('Unsubscribe error:', error);
+        }
+      )
+      .then(() => this.setState({ unsubscribing: false }));
   };
 
   onSubmit = event => {
     event.preventDefault();
-    const updatedAttrs = Object.keys(this.state.updatedMember);
-    if (updatedAttrs.length) {
+    if (this.updatedAttrs().length) {
       this.updateMember();
     }
   };
@@ -150,26 +165,28 @@ export class MemberEdit extends Component {
             </div>
           </div>
 
-          <div className="buttons is-pulled-left">
-            <button
-              onClick={this.unsubscribeMember}
-              className={classnames('button is-danger', {
-                'is-loading': unsubscribing,
-              })}
-              disabled={unsubscribing}
-            >
-              Unsubscribe
-            </button>
-          </div>
           <div className="buttons is-pulled-right">
             <button
               className={classnames('button is-primary', {
                 'is-loading': updating,
               })}
               type="submit"
-              disabled={updating}
+              disabled={updating || !this.updatedAttrs().length}
             >
               Update
+            </button>
+          </div>
+
+          <div className="buttons is-pulled-left">
+            <button
+              onClick={this.unsubscribeMember}
+              className={classnames('button', {
+                'is-danger': this.subscribed(),
+                'is-loading': unsubscribing,
+              })}
+              disabled={unsubscribing || !this.subscribed()}
+            >
+              Unsubscribe
             </button>
           </div>
         </form>
