@@ -37,7 +37,7 @@ class App extends Component {
       <BrowserRouter>
         <div className="App">
           <Switch>
-            <Route exact={true} path="/login" exact component={Login} />
+            <Route path="/login" exact component={Login} />
             <AuthenticatedRoute exact path="/" component={MemberSearch} />
             <AuthenticatedRoute path="/member/:id" component={MemberProfile} />
           </Switch>
