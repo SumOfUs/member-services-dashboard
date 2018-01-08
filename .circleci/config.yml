@@ -26,9 +26,9 @@ jobs:
       - deploy:
           name: Deploying to s3s
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            if [ "${CIRCLE_BRANCH}" == "${PRODUCTION_DEPLOY_BRANCH}" ]; then
               ./bin/deploy.sh production
-            elif [ "${CIRCLE_BRANCH}" == "staging" ]; then
+            elif [ "${CIRCLE_BRANCH}" == "${STAGING_DEPLOY_BRANCH}" ]; then
               ./bin/deploy.sh staging
             else
               echo "Nothing to deploy for this branch"
