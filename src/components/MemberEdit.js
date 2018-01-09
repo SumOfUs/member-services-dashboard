@@ -10,7 +10,9 @@ export class MemberEdit extends Component {
     this.api = new ApiService({ token: this.props.token });
     this.state = {
       updating: false,
-      updatedMember: {},
+      updatedMember: {
+        email: this.props.member.email,
+      },
     };
   }
 
@@ -50,6 +52,7 @@ export class MemberEdit extends Component {
 
   onChange = data => {
     if (!data) return;
+
     this.setState(prevState => {
       return {
         ...prevState,
