@@ -1,0 +1,57 @@
+.SubscriptionItem:hover {
+  background-color: rgba(0, 0, 0, 0.5%);
+}
+
+.SubscriptionItem:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 5%);
+  margin-bottom: 0;
+}
+
+.SubscriptionItem.is-mobile .level-item,
+.SubscriptionItem .level-item {
+  padding: 12px;
+  padding-top: 14px;
+  margin-right: 0;
+}
+.SubscriptionItem.is-mobile .level-item:not(:last-child) {
+  margin: 0;
+}
+
+.SubscriptionItem .level-item:last-child {
+  padding-right: 12px;
+}
+
+.SubscriptionItem-provider {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.SubscriptionItem-status.level-item {
+  border-right: 1px solid rgba(0, 0, 0, 5%);
+}
+.SubscriptionItem-status .active {
+  color: #00c493;
+}
+.SubscriptionItem-status .canceled {
+  color: #bbb;
+}
+
+.SubscriptionItem-status .status-label {
+  padding-left: 0.5rem;
+}
+
+.SubscriptionItem.box:hover {
+  background: green;
+}
+.SubscriptionItem-date {
+  font-size: 0.9rem;
+  border-right: 1px solid rgba(0, 0, 0, 5%);
+}
+
+.SubscriptionItem-cancel {
+  border: none;
+  cursor: pointer;
+}
+
+.SubscriptionItem-cancel:hover {
+  color: red;
+}

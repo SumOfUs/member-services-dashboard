@@ -1,6 +1,7 @@
 // @flow weak
 import axios from 'axios';
 import config from '../config';
+import type { Axios } from 'axios';
 
 function createClient(options) {
   return axios.create({
@@ -11,12 +12,18 @@ function createClient(options) {
   });
 }
 export default class ApiService {
+  client: Axios;
+
   constructor(options = {}) {
     this.client = createClient(options);
   }
 
   updateToken(token) {
     this.client = createClient({ token });
+  }
+
+  getMember(id) {
+    return this.client.get(`members/${id}`);
   }
 
   findMemberByEmail(email) {
@@ -47,11 +54,15 @@ export default class ApiService {
     );
   }
 
-  fetchBraintreeData(member) {
-    return this.client.get(`/members/`);
+  fetchBraintreeData(email: string) {
+    return this.client.get('members/braintree_data', { params: { email } });
   }
 
-  unsubscribeMember(email) {
+  fetchGoCardlessSubscriptions(memberId: string) {
+    return this.client.get(`members/${memberId}/gocardless_subscriptions`);
+  }
+
+  unsubscribeMember(email: string) {
     return this.client
       .post('/members/unsubscribe', { email: email })
       .then(response => response.data.objects);
