@@ -4,14 +4,14 @@ set -eu
 ENV=$1
 
 if [ "$ENV" == "production" ]; then
-  BUCKET_NAME=services.sumofus.org
-  WEBSITE_URL=https://services.sumofus.org
-  CF_DISTRIBUTION_ID=E2QLZWJLGWMLYK
-  REACT_APP_API_URL=''
+  BUCKET_NAME=support.sumofus.org
+  WEBSITE_URL=https://support.sumofus.org
+  CF_DISTRIBUTION_ID=E1D468MUB70GGE
+  REACT_APP_API_URL='https://3ifaupiqp1.execute-api.us-east-1.amazonaws.com/production'
 elif [ "$ENV" == "staging" ]; then
-  BUCKET_NAME=member-services-staging.sumofus.org
-  WEBSITE_URL=https://member-services-staging.sumofus.org
-  CF_DISTRIBUTION_ID=E67T5UQJH9BML
+  BUCKET_NAME=support-staging.sumofus.org
+  WEBSITE_URL=https://support-staging.sumofus.org
+  CF_DISTRIBUTION_ID=E4YZV57TYMVOC
   REACT_APP_API_URL='https://qglxytlgti.execute-api.us-east-1.amazonaws.com/staging'
 else
   echo "Don't know how to deploy ${ENV} environment"
