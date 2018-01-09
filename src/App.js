@@ -49,7 +49,7 @@ class App extends Component {
         <div className="App">
           <ToastContainer autoClose={4000} />
           <Switch>
-            <Route path="/login" exact component={Login} />
+            <Route exact={true} path="/login" component={Login} />
             <AuthenticatedRoute exact path="/" component={MemberSearch} />
             <AuthenticatedRoute path="/member/:id" component={MemberProfile} />
           </Switch>
