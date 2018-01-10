@@ -34,11 +34,13 @@ export default class SubscriptionItem extends Component<Props, State> {
   cancelSubscription = e => {
     e.preventDefault();
     if (this.isCancelDisabled()) return;
-    this.setState({ cancelling: true });
-    return this.props
-      .onCancel(this.props.subscription)
-      .then(() => this.setState({ cancelling: false }))
-      .catch(() => this.setState({ cancelling: false }));
+    if (window.confirm('Do you really want to cancel this subscription?')) {
+      this.setState({ cancelling: true });
+      return this.props
+        .onCancel(this.props.subscription)
+        .then(() => this.setState({ cancelling: false }))
+        .catch(() => this.setState({ cancelling: false }));
+    }
   };
 
   renderStatusIcon(status: string) {
