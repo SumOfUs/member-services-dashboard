@@ -12,7 +12,7 @@ export class AuthenticatedRoute extends PureComponent {
     return (
       <Redirect
         to={{
-          pathname: 'login',
+          pathname: '/login',
           state: { from: props.location },
         }}
       />
