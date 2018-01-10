@@ -2,7 +2,7 @@
 
 export type Subscription = GCSubscription | BTSubscription;
 
-type Status = 'active' | 'canceled';
+type Status = 'active' | 'canceled' | 'cancelled';
 type BTCustomer = {
   firstName: string,
   lastName: string,

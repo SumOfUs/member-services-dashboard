@@ -31,7 +31,8 @@
 .SubscriptionItem-status .active {
   color: #00c493;
 }
-.SubscriptionItem-status .canceled {
+.SubscriptionItem-status .canceled,
+.SubscriptionItem-status .cancelled {
   color: #bbb;
 }
 

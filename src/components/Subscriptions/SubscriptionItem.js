@@ -14,7 +14,7 @@ interface SubscriptionView {
   startDate: string;
   endDate?: string;
   // FIXME: canceled typo?
-  status: 'active' | 'canceled';
+  status: 'active' | 'canceled' | 'cancelled';
 }
 
 type Props = {
