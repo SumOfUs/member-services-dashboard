@@ -61,6 +61,7 @@ export class Login extends Component {
                     <NewPassword
                       user={this.state.user}
                       onSuccess={this.props.loginSuccess}
+                      onFailure={this.props.loginFailure}
                     />
                   ) : (
                     <LoginForm

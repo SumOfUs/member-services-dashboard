@@ -64,8 +64,12 @@ export function authenticate(user, details) {
 export function completeNewPasswordChallenge(user, newPassword) {
   return new Promise((resolve, reject) => {
     user.completeNewPasswordChallenge(newPassword, null, {
-      onSuccess: resp => resolve(resp),
-      onFailure: err => reject(err),
+      onSuccess: data => {
+        getUserAttributes(user).then(attr => {
+          resolve({ user_attributes: attr, token: data });
+        });
+      },
+      onFailure: reject,
     });
   });
 }
@@ -87,11 +91,9 @@ export function login(username, password) {
 }
 
 export function onLoginSuccess(data) {
-  console.log('login success:', data);
   return Promise.resolve(data);
 }
 
 export function onLoginFailure(data) {
-  console.log('onLoginFailure:', data);
   return Promise.reject(data);
 }

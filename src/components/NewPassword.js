@@ -19,9 +19,18 @@ export default class NewPassword extends PureComponent {
 
   onSubmit = e => {
     e.preventDefault();
+
     completeNewPasswordChallenge(this.props.user, this.state.newPassword).then(
       resp => {
-        return <Redirect to="/" />;
+        this.props.onSuccess(resp);
+      },
+      err => {
+        this.setState(state => ({
+          ...state,
+          error: err.message,
+        }));
+
+        this.props.onFailure(err);
       }
     );
   };

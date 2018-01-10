@@ -21,8 +21,6 @@ export default class LoginForm extends Component {
       () => {
         login(this.props.email, this.props.password).then(
           response => {
-            console.log('more success:', response);
-
             this.setState(state => ({ ...state, loading: false }));
             if (response.newPasswordRequired) {
               this.props.onNewPasswordRequired(response.user);
