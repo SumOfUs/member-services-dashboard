@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Header from './Header';
-import Loading from '../components/Loading';
 import Box from '../components/Box';
 import MemberEdit from '../components/MemberEdit';
 import SubscriptionsList from '../components/Subscriptions/SubscriptionList';
@@ -50,7 +49,6 @@ export default class MemberProfile extends Component {
             <MemberEdit member={member} />
           </Box>
 
-          <h3>Subscriptions</h3>
           <SubscriptionsList member={member} />
           {/*
           <Box className="MemberProfile-section">

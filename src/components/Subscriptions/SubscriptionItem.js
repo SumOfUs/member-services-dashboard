@@ -1,14 +1,25 @@
-// @flow
+// @flow weak
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import format from 'date-fns/format';
 import FormattedCurrency from '../FormattedCurrency';
-import type { Subscription } from './types';
+import type { BTSubscription, GCSubscription } from './types';
 import './SubscriptionItem.css';
 
+interface SubscriptionView {
+  id: string;
+  provider: 'braintree' | 'gocardless';
+  amount: number;
+  currency: string;
+  startDate: string;
+  endDate?: string;
+  // FIXME: canceled typo?
+  status: 'active' | 'canceled';
+}
+
 type Props = {
-  subscription: Subscription,
-  onCancel: (subscription: Subscription) => Promise<*>,
+  subscription: BTSubscription | GCSubscription,
+  onCancel: (subscription: BTSubscription | GCSubscription) => Promise<*>,
 };
 
 type State = {
@@ -38,10 +49,7 @@ export default class SubscriptionItem extends Component<Props, State> {
     );
   }
 
-  renderAmount() {
-    const { subscription } = this.props;
-    const amount = subscription.amount;
-    const currency = subscription.currency || subscription.merchantAccountId;
+  renderAmount(amount, currency) {
     return (
       <span>
         <FormattedCurrency amount={amount} currency={currency} />/month
@@ -49,9 +57,7 @@ export default class SubscriptionItem extends Component<Props, State> {
     );
   }
 
-  renderDate() {
-    const { subscription } = this.props;
-    const date = subscription.start_date || subscription.createdAt;
+  renderDate(date: string) {
     return <span>created {format(date, 'DD.MM.YYYY')}</span>;
   }
 
@@ -63,43 +69,85 @@ export default class SubscriptionItem extends Component<Props, State> {
 
   render() {
     const { subscription } = this.props;
-    const { provider, status } = subscription;
+    switch (subscription.provider) {
+      case 'braintree':
+        return this.renderBTSubscription(subscription);
+      case 'gocardless':
+        return this.renderGCSubscription(subscription);
+      default:
+        return null;
+    }
+  }
+
+  renderBTSubscription(s: BTSubscription) {
+    return this.renderSubscription({
+      id: s.id,
+      provider: s.provider,
+      startDate: s.createdAt,
+      amount: s.amount,
+      currency: s.merchantAccountId,
+      status: s.status,
+    });
+  }
+
+  renderGCSubscription(s: GCSubscription): React$Node {
+    return this.renderSubscription({
+      id: s.id,
+      provider: s.provider,
+      startDate: s.start_date,
+      amount: s.amount,
+      currency: s.currency,
+      status: s.status,
+    });
+  }
+
+  renderSubscription(data: SubscriptionView): React$Node {
     return (
       <div
-        className={`SubscriptionItem  level is-mobile ${provider} ${status}`}
+        className={classnames('SubscriptionItem level is-mobile', [
+          data.provider,
+          data.status,
+        ])}
       >
         <div className="level-left">
           <div className="SubscriptionItem-provider level-item is-hidden-mobile">
-            {provider}
+            {data.provider}
           </div>
-          <div className="level-item">{this.renderAmount()}</div>
+          <div className="level-item">
+            <code>{data.id}</code>
+          </div>
+          <div className="level-item">
+            {this.renderAmount(data.amount, data.currency)}
+          </div>
         </div>
 
         <div className="level-right">
           <div className="SubscriptionItem-date level-item has-text-right has-text-grey">
-            {this.renderDate()}
+            {this.renderDate(data.startDate)}
           </div>
           <div className="SubscriptionItem-status level-item">
-            {this.renderStatusIcon(status)}
+            {this.renderStatusIcon(data.status)}
             <span className="is-hidden-mobile status-label is-size-7">
-              {status}
+              {data.status}
             </span>
           </div>
-          <a
-            className={classnames(
-              'SubscriptionItem-cancel level-item has-text-centered button is-1',
-              {
-                'is-disabled': status !== 'active',
-                'is-loading': this.state.cancelling,
-              }
-            )}
-            className="SubscriptionItem-cancel level-item has-text-centered button is-1"
-            onClick={this.cancelSubscription}
-          >
-            <i className="fa fa-trash" />
-          </a>
+          <div className="SubscriptionItem-cancel level-item">
+            {data.status === 'active' && this.renderCancelButton()}
+          </div>
         </div>
       </div>
+    );
+  }
+
+  renderCancelButton() {
+    const className = classnames({
+      button: true,
+      'is-loading': this.state.cancelling,
+    });
+    return (
+      <a className={className} onClick={this.cancelSubscription}>
+        <i className="fa fa-trash" />
+      </a>
     );
   }
 }

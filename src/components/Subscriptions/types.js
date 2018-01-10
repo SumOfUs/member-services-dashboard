@@ -2,6 +2,7 @@
 
 export type Subscription = GCSubscription | BTSubscription;
 
+type Status = 'active' | 'canceled';
 type BTCustomer = {
   firstName: string,
   lastName: string,
@@ -33,7 +34,7 @@ export type GCSubscription = {
   created_at: string,
   amount: number,
   currency: string,
-  status: string,
+  status: Status,
   name: string,
   start_date: string,
   end_date: string,
@@ -75,7 +76,7 @@ export type BTSubscription = {
   nextBillingPeriodAmount: string,
   numberOfBillingCycles: string,
   amount: number,
-  status: string,
+  status: Status,
   statusHistory: BTStatusHistory[],
   transactions: BTTransaction[],
 };

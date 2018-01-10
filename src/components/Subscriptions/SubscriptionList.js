@@ -5,7 +5,7 @@ import ApiService from '../../libs/api-service';
 import SubscriptionItem from './SubscriptionItem';
 import Loading from '../Loading';
 
-import type { Subscription } from './types';
+import type { Subscription, GCSubscription, BTSubscription } from './types';
 
 import './SubscriptionList.css';
 
@@ -15,57 +15,84 @@ type Props = {
 };
 
 type State = {
+  btSubscriptions: BTSubscription[],
+  gcSubscriptions: GCSubscription[],
   loadingBraintree: boolean,
   loadingGocardless: boolean,
 };
 
-export class SubscriptionList extends Component<Props> {
+export class SubscriptionList extends Component<Props, State> {
   api: ApiService;
 
   constructor(props: Props) {
     super(props);
     this.api = new ApiService({ token: this.props.token });
+
     this.state = {
       btSubscriptions: [],
       gcSubscriptions: [],
       loadingBraintree: true,
       loadingGocardless: true,
     };
-    this.api.fetchBraintreeData();
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   fetchData() {
-    this.api.fetchBraintreeData(this.props.member.email).then(data =>
-      this.setState({
-        loadingBraintree: false,
-        btSubscriptions: false,
+    this.api
+      .fetchBraintreeData(this.props.member.email)
+      .then(response => {
+        console.log('RESPONSE', response.data);
+        this.setState(s => ({
+          loadingBraintree: false,
+          btSubscriptions: response.data.subscriptions,
+        }));
       })
-    );
-    this.api.fetchGoCardlessSubscriptions(this.props.member.id).then(data =>
-      this.setState({
-        loadingGocardless: false,
-        gcSubscriptions: data,
-      })
-    );
+      .catch(e => {
+        console.error(e);
+        this.setState(s => ({ loadingBraintree: false }));
+      });
+    this.api
+      .fetchGoCardlessSubscriptions(this.props.member.id)
+      .then(response =>
+        this.setState({
+          loadingGocardless: false,
+          gcSubscriptions: response.data,
+        })
+      )
+      .catch(e => {
+        console.error(e);
+        this.setState(s => ({ loadingGocardless: false }));
+      });
   }
 
-  subscriptions() {
+  get subscriptions(): Subscription[] {
     return [...this.state.btSubscriptions, ...this.state.gcSubscriptions];
   }
 
-  onCancelSubscription = async (subscription: Subscription) => {
-    await this.api.cancelSubscription(subscription.provider, subscription.id);
-    this.props.onCancel(subscription);
+  onCancelSubscription = (subscription: Subscription) => {
+    this.api.cancelSubscription(subscription.provider, subscription.id).then(
+      result => {
+        // TODO: update subscription
+      },
+      failure => {
+        console.log('error', failure);
+      }
+    );
     return subscription;
   };
 
   renderEmpty() {
-    return <p>No subscriptions</p>;
+    return <p className="has-text-centered">No recurring donations</p>;
   }
 
   renderSubscriptions() {
-    if (this.props.subscriptions.length === 0) return this.renderEmpty();
-    return this.props.subscriptions.map(subscription => (
+    if (!this.isLoading() && this.subscriptions.length === 0) {
+      return this.renderEmpty();
+    }
+    return this.subscriptions.map(subscription => (
       <SubscriptionItem
         key={subscription.id}
         subscription={subscription}
@@ -74,20 +101,22 @@ export class SubscriptionList extends Component<Props> {
     ));
   }
 
-  isLoading() {
+  isLoading(): boolean {
     return this.state.loadingBraintree || this.state.loadingGocardless;
   }
+
   render() {
-    if (!this.props.subscriptions) return <Loading />;
     return (
       <div className="SubscriptionList">
-        <h3>
-          Subscriptions
-          {this.isLoading() && <Loading />}
-        </h3>
-        {!this.isLoading() && (
-          <div className="box">{this.renderSubscriptions()}</div>
-        )}
+        <h3 className="has-text-weight-semibold">Recurring Donations</h3>
+        <div className="box">
+          {this.isLoading() && (
+            <p className="has-text-centered">
+              <Loading loading={this.isLoading()} />
+            </p>
+          )}
+          {!this.isLoading() && this.renderSubscriptions()}
+        </div>
       </div>
     );
   }

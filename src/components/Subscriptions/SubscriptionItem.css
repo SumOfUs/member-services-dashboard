@@ -1,5 +1,5 @@
 .SubscriptionItem:hover {
-  background-color: rgba(0, 0, 0, 0.5%);
+  background-color: rgba(0, 0, 0, 1%);
 }
 
 .SubscriptionItem:not(:last-child) {
@@ -47,11 +47,20 @@
   border-right: 1px solid rgba(0, 0, 0, 5%);
 }
 
-.SubscriptionItem-cancel {
+.is-mobile .SubscriptionItem-cancel.level-item,
+.SubscriptionItem-cancel.level-item {
+  padding: 0;
+  width: 3rem;
+}
+.SubscriptionItem-cancel a {
+  width: 3rem;
+  padding: 16px 12px;
+  height: 100%;
   border: none;
   cursor: pointer;
+  border-radius: 0;
 }
 
-.SubscriptionItem-cancel:hover {
+.SubscriptionItem-cancel a:hover {
   color: red;
 }

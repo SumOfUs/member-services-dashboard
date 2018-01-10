@@ -9,11 +9,15 @@ export default class FormattedCurrency extends PureComponent<Props> {
   }
 
   format() {
-    const formatter = new Intl.NumberFormat(this.locale(), {
-      style: 'currency',
-      currency: this.props.currency,
-    });
-    return formatter.format(this.props.amount);
+    try {
+      const formatter = new Intl.NumberFormat(this.locale(), {
+        style: 'currency',
+        currency: this.props.currency,
+      });
+      return formatter.format(this.props.amount);
+    } catch (e) {
+      return this.props.amount;
+    }
   }
   render() {
     return <span className="FormattedCurrency">{this.format()}</span>;

@@ -1,5 +1,10 @@
 // @flow weak
 import React from 'react';
 
-const Loading = () => <i className="fa fa-spin" />;
-export default Loading;
+type Props = {
+  loading: boolean,
+};
+export default (props: Props) => {
+  if (props.loading) return <i className="fa fa-spin" />;
+  return null;
+};
