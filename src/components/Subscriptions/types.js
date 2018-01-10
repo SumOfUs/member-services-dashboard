@@ -30,22 +30,12 @@ type GCMetadata = {
 };
 export type GCSubscription = {
   provider: 'gocardless',
-  id: string,
-  created_at: string,
+  createdAt: string,
+  startDate: string,
   amount: number,
+  id: string,
   currency: string,
   status: Status,
-  name: string,
-  start_date: string,
-  end_date: string,
-  interval: number,
-  interval_unit: string,
-  day_of_month: number,
-  month: string,
-  payment_reference: string,
-  upcoming_payments: GCUpcomingPayment[],
-  metadata: GCMetadata,
-  links: GCLink,
 };
 
 type GCUpcomingPayment = {

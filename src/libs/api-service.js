@@ -37,7 +37,7 @@ export default class ApiService {
     const path = `/payments-service/${provider}/subscriptions/${id}`;
 
     return this.client.delete(path).then(
-      s => s,
+      success => success,
       error => {
         console.error(error);
         return error;

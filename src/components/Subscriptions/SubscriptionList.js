@@ -1,6 +1,7 @@
 // @flow weak
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
 import ApiService from '../../libs/api-service';
 import SubscriptionItem from './SubscriptionItem';
 import Loading from '../Loading';
@@ -37,10 +38,14 @@ export class SubscriptionList extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchSubscriptions();
   }
 
-  fetchData() {
+  get subscriptions(): Subscription[] {
+    return [...this.state.btSubscriptions, ...this.state.gcSubscriptions];
+  }
+
+  fetchSubscriptions() {
     this.api
       .fetchBraintreeData(this.props.member.email)
       .then(response => {
@@ -68,20 +73,25 @@ export class SubscriptionList extends Component<Props, State> {
       });
   }
 
-  get subscriptions(): Subscription[] {
-    return [...this.state.btSubscriptions, ...this.state.gcSubscriptions];
-  }
-
   onCancelSubscription = (subscription: Subscription) => {
-    this.api.cancelSubscription(subscription.provider, subscription.id).then(
-      result => {
-        // TODO: update subscription
-      },
-      failure => {
-        console.log('error', failure);
-      }
-    );
-    return subscription;
+    const { provider } = subscription;
+    return this.api
+      .cancelSubscription(subscription.provider, subscription.id)
+      .then(
+        result => {
+          toast.success('Subscription cancelled.');
+          const updated = Object.assign({}, subscription, {
+            status: 'canceled',
+          });
+          let key = 'btSubscriptions';
+          if (provider === 'gocardless') key = 'gcSubscriptions';
+          return this.setState(prevState => ({
+            ...prevState,
+            [key]: replaceInList(prevState[key], subscription, updated),
+          }));
+        },
+        failure => toast.error('Could not cancel the subscription')
+      );
   };
 
   renderEmpty() {
@@ -127,3 +137,11 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(SubscriptionList);
+
+function replaceInList<T>(list: T[], oldItem: T, newItem: T): T[] {
+  return [
+    ...list.slice(0, list.indexOf(oldItem)),
+    newItem,
+    ...list.slice(list.indexOf(oldItem) + 1),
+  ];
+}

@@ -94,7 +94,7 @@ export default class SubscriptionItem extends Component<Props, State> {
     return this.renderSubscription({
       id: s.id,
       provider: s.provider,
-      startDate: s.start_date,
+      startDate: s.startDate,
       amount: s.amount,
       currency: s.currency,
       status: s.status,
@@ -110,6 +110,9 @@ export default class SubscriptionItem extends Component<Props, State> {
         ])}
       >
         <div className="level-left">
+          <div className="SubscriptionItem-status level-item">
+            {this.renderStatusIcon(data.status)}
+          </div>
           <div className="SubscriptionItem-provider level-item is-hidden-mobile">
             {data.provider}
           </div>
@@ -124,12 +127,6 @@ export default class SubscriptionItem extends Component<Props, State> {
         <div className="level-right">
           <div className="SubscriptionItem-date level-item has-text-right has-text-grey">
             {this.renderDate(data.startDate)}
-          </div>
-          <div className="SubscriptionItem-status level-item">
-            {this.renderStatusIcon(data.status)}
-            <span className="is-hidden-mobile status-label is-size-7">
-              {data.status}
-            </span>
           </div>
           <div className="SubscriptionItem-cancel level-item">
             {data.status === 'active' && this.renderCancelButton()}

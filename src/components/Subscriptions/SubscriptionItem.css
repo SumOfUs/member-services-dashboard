@@ -25,7 +25,7 @@
   font-weight: bold;
   text-transform: capitalize;
 }
-.SubscriptionItem-status.level-item {
+.SubscriptionItem-date.level-item {
   border-right: 1px solid rgba(0, 0, 0, 5%);
 }
 .SubscriptionItem-status .active {
