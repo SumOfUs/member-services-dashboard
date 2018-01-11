@@ -87,7 +87,7 @@ export default class SubscriptionItem extends Component<Props, State> {
       provider: s.provider,
       startDate: s.createdAt,
       amount: s.amount,
-      currency: s.merchantAccountId,
+      currency: s.currency,
       status: s.status,
     });
   }
