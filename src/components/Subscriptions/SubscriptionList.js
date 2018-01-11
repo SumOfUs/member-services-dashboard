@@ -49,7 +49,6 @@ export class SubscriptionList extends Component<Props, State> {
     this.api
       .fetchBraintreeData(this.props.member.email)
       .then(response => {
-        console.log('RESPONSE', response.data);
         this.setState(s => ({
           loadingBraintree: false,
           btSubscriptions: response.data.subscriptions,

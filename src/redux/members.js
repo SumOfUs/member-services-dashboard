@@ -8,7 +8,6 @@ export const UPDATE_MEMBERS = '@app:members:search:update';
 
 const reset = () => initialState;
 const update = (state, action) => {
-  console.log('members:', action.members);
   return reduce(
     action.members,
     (result, member) => {
