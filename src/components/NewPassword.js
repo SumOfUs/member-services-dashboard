@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { completeNewPasswordChallenge } from '../libs/auth-service';
-import { Redirect } from 'react-router-dom';
 
 export default class NewPassword extends PureComponent {
   constructor(props) {
