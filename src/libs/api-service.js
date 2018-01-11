@@ -2,6 +2,7 @@
 import axios from 'axios';
 import config from '../config';
 import type { Axios } from 'axios';
+import unsubscribePageFinder from './unsubscribePageFinder';
 
 function createClient(options) {
   return axios.create({
@@ -63,9 +64,13 @@ export default class ApiService {
     return this.client.get(`members/${memberId}/gocardless_subscriptions`);
   }
 
-  unsubscribeMember(email: string) {
+  unsubscribeMember(email: string, langResource: string) {
+    const page = unsubscribePageFinder(langResource);
+
     return this.client
-      .post('/members/unsubscribe', { email: email })
-      .then(response => response.data.objects);
+      .post('/members/unsubscribe', { email: email, page: page })
+      .then(response => {
+        return response.data.objects;
+      });
   }
 }

@@ -13,6 +13,7 @@ export class MemberEdit extends Component {
       updating: false,
       unsubscribing: false,
       updatedMember: {},
+      subscription_status: this.props.member.subscription_status,
     };
   }
 
@@ -21,8 +22,7 @@ export class MemberEdit extends Component {
   }
 
   subscribed() {
-    const member = this.props.member;
-    return member && member.subscription_status === 'subscribed';
+    return this.state.subscription_status === 'subscribed';
   }
 
   updatedAttrs() {
@@ -44,12 +44,16 @@ export class MemberEdit extends Component {
   unsubscribeMember = e => {
     e.preventDefault();
     this.setState({ unsubscribing: true });
+
     this.api
-      .unsubscribeMember(this.props.member.email)
+      .unsubscribeMember(this.props.member.email, this.props.member.lang)
       .then(
         success => {
           toast.success('Member unsubscribed successfully.');
-          this.setState({ unsubscribing: false });
+          this.setState({
+            unsubscribing: false,
+            subscription_status: 'unsubscribed',
+          });
         },
         error => {
           toast.error('There was an error unsubscribing the member.');
