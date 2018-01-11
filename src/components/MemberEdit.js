@@ -1,11 +1,14 @@
+// @flow weak
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { toast } from 'react-toastify';
 import ApiService from '../libs/api-service';
+import type { UpdatedMemberAttrs } from '../libs/api-service';
 import SelectCountry from '../components/SelectCountry';
 
-export class MemberEdit extends Component {
+export class MemberEdit extends Component<*, *> {
+  api: ApiService;
   constructor(props) {
     super(props);
     this.api = new ApiService({ token: this.props.token });
@@ -30,10 +33,10 @@ export class MemberEdit extends Component {
   }
 
   updateMember() {
-    const member = this.props.member;
+    const { id, email } = this.props.member;
     this.setState(state => ({ ...state, updating: true }));
     this.api
-      .updateMember(member.id, this.state.updatedMember)
+      .updateMember({ id, email, ...this.state.updatedMember })
       .then(
         () => toast.success('Member updated successfully'),
         () => toast.error('Error updating member')
