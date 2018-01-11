@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { toast } from 'react-toastify';
 import ApiService from '../libs/api-service';
-import type { UpdatedMemberAttrs } from '../libs/api-service';
 import SelectCountry from '../components/SelectCountry';
 
 export class MemberEdit extends Component<*, *> {
