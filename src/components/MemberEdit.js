@@ -128,6 +128,7 @@ export class MemberEdit extends Component {
                   className="input"
                   placeholder="example@example.com"
                   defaultValue={member.email}
+                  disabled
                   required
                   onChange={({ target }) =>
                     this.onChange({ email: target.value })
