@@ -18,7 +18,7 @@ else
   exit 1
 fi
 
-CI=true yarn build
+REACT_APP_API_URL=$REACT_APP_API_URL yarn build
 
 
 echo "###################################"
