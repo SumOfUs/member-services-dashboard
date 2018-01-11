@@ -3,6 +3,11 @@ import axios from 'axios';
 import config from '../config';
 import type { Axios } from 'axios';
 
+export type UpdatedMemberAttrs = {
+  id: string,
+  email: string,
+  [key: string]: string | number | boolean,
+};
 function createClient(options) {
   return axios.create({
     baseURL: options.baseURL || config.api.API_URL,
@@ -45,8 +50,8 @@ export default class ApiService {
     );
   }
 
-  updateMember(id, attrs) {
-    return this.client.put(`/members/${id}/`, attrs).then(
+  updateMember(updatedMember: UpdatedMemberAttrs) {
+    return this.client.put(`/members/${updatedMember.id}/`, updatedMember).then(
       s => console.log(s),
       error => {
         console.error(error);
