@@ -50,8 +50,17 @@ class App extends Component {
           <ToastContainer autoClose={4000} />
           <Switch>
             <Route exact={true} path="/login" component={Login} />
-            <AuthenticatedRoute exact path="/" component={MemberSearch} />
-            <AuthenticatedRoute path="/member/:id" component={MemberProfile} />
+            <AuthenticatedRoute
+              exact
+              path="/"
+              component={MemberSearch}
+              token={this.props.token}
+            />
+            <AuthenticatedRoute
+              path="/member/:id"
+              component={MemberProfile}
+              token={this.props.token}
+            />
           </Switch>
         </div>
       </BrowserRouter>

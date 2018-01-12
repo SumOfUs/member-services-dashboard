@@ -13,13 +13,14 @@ import './MemberSearch.css';
 export class MemberSearch extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       searching: false,
       email: '',
     };
+  }
 
-    this.api = new ApiService({});
+  componentDidMount() {
+    this.api = new ApiService({ token: this.props.token });
   }
 
   componentWillReceiveProps(newProps = {}) {
@@ -76,7 +77,7 @@ export class MemberSearch extends Component {
 }
 
 const mapStateToProps = state => ({
-  token: `Bearer ${state.auth.token}`,
+  token: state.auth.token,
   members: values(state.members),
 });
 

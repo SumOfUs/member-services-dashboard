@@ -14,7 +14,7 @@ const AUTH_NEW_PASSWORD_REQUIRED = '@app:auth:new_password_required';
 const setAuth = (state, action) => {
   return {
     ...state,
-    token: action.tokens.token.accessToken.jwtToken,
+    token: action.tokens.token.idToken.jwtToken,
     user: action.tokens.user_attributes,
   };
 };
