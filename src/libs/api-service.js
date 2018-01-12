@@ -2,7 +2,6 @@
 import axios from 'axios';
 import config from '../config';
 import type { Axios } from 'axios';
-import unsubscribePageFinder from './unsubscribePageFinder';
 
 function createClient(options) {
   return axios.create({
@@ -65,10 +64,8 @@ export default class ApiService {
   }
 
   unsubscribeMember(email: string, langResource: string) {
-    const page = unsubscribePageFinder(langResource);
-
     return this.client
-      .post('/members/unsubscribe', { email: email, page: page })
+      .post('/members/unsubscribe', { email: email, lang: langResource })
       .then(response => {
         return response.data.objects;
       });
