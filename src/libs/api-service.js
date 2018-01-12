@@ -6,9 +6,9 @@ import type { Axios } from 'axios';
 function createClient(options) {
   return axios.create({
     baseURL: options.baseURL || config.api.API_URL,
-    // headers: {
-    //   authorization: `Bearer ${options.token}`,
-    // },
+    headers: {
+      authorization: options.token,
+    },
   });
 }
 
@@ -24,7 +24,7 @@ export default class ApiService {
   }
 
   getMember(id) {
-    return this.client.get(`members/${id}`);
+    return this.client.get(`members/${id}`).then(response => response.data);
   }
 
   findMemberByEmail(email) {
@@ -46,13 +46,7 @@ export default class ApiService {
   }
 
   updateMember(id, updatedMember) {
-    return this.client.put(`/members/${id}/`, updatedMember).then(
-      s => console.log(s),
-      error => {
-        console.error(error);
-        return error;
-      }
-    );
+    return this.client.put(`/members/${id}/`, updatedMember);
   }
 
   fetchBraintreeData(email: string) {

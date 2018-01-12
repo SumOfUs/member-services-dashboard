@@ -1,21 +1,35 @@
+// @flow weak
 import React, { Component } from 'react';
 import Header from './Header';
 import Box from '../components/Box';
 import MemberEdit from '../components/MemberEdit';
 import SubscriptionsList from '../components/Subscriptions/SubscriptionList';
-import { getMember } from '../libs/backendClient';
+import ApiService from '../libs/api-service';
 
 import './MemberProfile.css';
-
-export default class MemberProfile extends Component {
+type Props = {
+  token: string,
+  match: {
+    params: {
+      id: string,
+    },
+  },
+};
+type State = {
+  member: ?any,
+};
+export default class MemberProfile extends Component<Props, State> {
+  api: ApiService;
   constructor(props) {
     super(props);
     this.state = {
       member: null,
     };
+    this.api = new ApiService({ token: props.token });
   }
   componentDidMount() {
-    getMember(this.props.match.params.id)
+    this.api
+      .getMember(this.props.match.params.id)
       .then(member => this.setState({ member }))
       .catch(err => console.debug('Whoops!', err));
   }
@@ -56,21 +70,6 @@ export default class MemberProfile extends Component {
           </Box>
 
           <SubscriptionsList member={member} />
-          {/*
-          <Box className="MemberProfile-section">
-            <h3> Customers </h3>
-            <CustomersTable customers={this.state.customers} />
-          </Box>
-          <Box className="MemberProfile-section">
-            <h3> Credit Cards </h3>
-            <CreditCardsTable creditCards={this.state.creditCards} />
-          </Box>
-
-          <Box className="MemberProfile-section">
-            <h3> Paypal Accounts </h3>
-            <PaypalAccountsTable paypalAccounts={this.state.paypalAccounts} />
-          </Box>
-          */}
         </div>
       </div>
     );

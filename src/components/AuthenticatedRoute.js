@@ -6,14 +6,14 @@ export class AuthenticatedRoute extends PureComponent {
   renderSwitch(props) {
     const { token, component: Component } = this.props;
     if (token) {
-      return <Component {...props} />;
+      return <Component {...props} token={token} />;
     }
 
     return (
       <Redirect
         to={{
           pathname: '/login',
-          state: { from: props.location },
+          state: { from: this.props.location },
         }}
       />
     );
