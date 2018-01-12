@@ -37,10 +37,10 @@ export class MemberEdit extends Component<Props, *> {
   }
 
   updateMember() {
-    const { id } = this.props.member;
+    const { id, email } = this.props.member;
     this.setState(state => ({ ...state, updating: true }));
     this.api
-      .updateMember(id, this.state.updatedMember)
+      .updateMember(id, { email, ...this.state.updatedMember })
       .then(() => this.props.onUpdate(this.state.updatedMember))
       .then(() => this.setState({ updating: false, updatedMember: {} }))
       .then(
