@@ -18,6 +18,8 @@ else
   exit 1
 fi
 
+echo "API URL IS SET TO ${REACT_APP_API_URL}"
+
 REACT_APP_API_URL=$REACT_APP_API_URL yarn build
 
 
