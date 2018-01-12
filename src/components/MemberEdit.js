@@ -32,10 +32,10 @@ export class MemberEdit extends Component<*, *> {
   }
 
   updateMember() {
-    const { id, email } = this.props.member;
+    const { id } = this.props.member;
     this.setState(state => ({ ...state, updating: true }));
     this.api
-      .updateMember({ id, email, ...this.state.updatedMember })
+      .updateMember(id, this.state.updatedMember)
       .then(
         () => toast.success('Member updated successfully'),
         () => toast.error('Error updating member')
@@ -89,6 +89,28 @@ export class MemberEdit extends Component<*, *> {
     return (
       <div className="MemberEdit is-clearfix">
         <form onSubmit={this.onSubmit}>
+          <div className="columns">
+            <div id="MemberEdit__email" className="column is-half-tablet">
+              <label className="label">Email</label>
+              <div className="control has-icons-left">
+                <input
+                  type="email"
+                  className="input"
+                  placeholder="example@example.com"
+                  defaultValue={member.email}
+                  required
+                  disabled
+                  title="Email edits are temporarily disabled"
+                  onChange={({ target }) =>
+                    this.onChange({ email: target.value })
+                  }
+                />
+                <span className="icon is-small is-left">
+                  <i className="fa fa-envelope" />
+                </span>
+              </div>
+            </div>
+          </div>
           <div className="columns is-multiline">
             <div id="MemberEdit-first-name" className="column is-half-tablet">
               <label className="label">First name</label>
@@ -122,26 +144,6 @@ export class MemberEdit extends Component<*, *> {
               </div>
             </div>
 
-            <div id="MemberEdit__email" className="column is-half-tablet">
-              <label className="label">Email</label>
-              <div className="control has-icons-left">
-                <input
-                  type="email"
-                  className="input"
-                  placeholder="example@example.com"
-                  defaultValue={member.email}
-                  disabled
-                  required
-                  onChange={({ target }) =>
-                    this.onChange({ email: target.value })
-                  }
-                />
-                <span className="icon is-small is-left">
-                  <i className="fa fa-envelope" />
-                </span>
-              </div>
-            </div>
-
             <div className="column is-half-tablet field">
               <label className="label">Postal code</label>
               <div className="control">
@@ -157,7 +159,7 @@ export class MemberEdit extends Component<*, *> {
                 />
               </div>
             </div>
-            <div className="column is-half-tablet is-offset-half field">
+            <div className="column is-half-tablet field">
               <label className="label">Country</label>
               <div className="control">
                 <SelectCountry
