@@ -6,7 +6,12 @@ import { toast } from 'react-toastify';
 import ApiService from '../libs/api-service';
 import SelectCountry from '../components/SelectCountry';
 
-export class MemberEdit extends Component<*, *> {
+type Props = {
+  token: string,
+  member: any,
+  onUpdate: (attributes: any) => void,
+};
+export class MemberEdit extends Component<Props, *> {
   api: ApiService;
   constructor(props) {
     super(props);
@@ -36,11 +41,12 @@ export class MemberEdit extends Component<*, *> {
     this.setState(state => ({ ...state, updating: true }));
     this.api
       .updateMember(id, this.state.updatedMember)
+      .then(() => this.props.onUpdate(this.state.updatedMember))
+      .then(() => this.setState({ updating: false, updatedMember: {} }))
       .then(
         () => toast.success('Member updated successfully'),
         () => toast.error('Error updating member')
-      )
-      .then(() => this.setState({ updating: false, updatedMember: {} }));
+      );
   }
 
   unsubscribeMember = e => {

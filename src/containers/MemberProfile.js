@@ -37,6 +37,12 @@ export default class MemberProfile extends Component {
     });
   };
 
+  onMemberUpdate = attributes => {
+    this.setState(prevState => ({
+      member: { ...prevState.member, ...attributes },
+    }));
+  };
+
   render() {
     const { member } = this.state;
     if (!member) return 'Loading...';
@@ -46,7 +52,7 @@ export default class MemberProfile extends Component {
         <div className="MemberProfile-content section">
           <h3 className="is-size-3 has-text-centered">Manage member</h3>
           <Box className="MemberProfile-edit-form">
-            <MemberEdit member={member} />
+            <MemberEdit member={member} onUpdate={this.onMemberUpdate} />
           </Box>
 
           <SubscriptionsList member={member} />
