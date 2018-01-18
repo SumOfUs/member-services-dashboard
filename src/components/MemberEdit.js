@@ -45,6 +45,7 @@ export class MemberEdit extends Component<Props, *> {
       .then(() => this.setState({ updating: false, updatedMember: {} }))
       .then(() => toast.success('Member updated successfully'))
       .catch(error => {
+        this.setState({ updating: false });
         toast.error('Error updating member');
         console.log(error);
       });
