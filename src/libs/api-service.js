@@ -45,8 +45,12 @@ export default class ApiService {
     );
   }
 
-  updateMember(id, updatedMember) {
-    return this.client.put(`/members/${id}/`, updatedMember);
+  updateMember(id, email, params) {
+    const payload = {
+      email: email,
+      member: params,
+    };
+    return this.client.put(`/members/${id}/`, payload);
   }
 
   fetchBraintreeData(email: string) {

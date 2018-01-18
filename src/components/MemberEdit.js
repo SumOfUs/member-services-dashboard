@@ -40,13 +40,14 @@ export class MemberEdit extends Component<Props, *> {
     const { id, email } = this.props.member;
     this.setState(state => ({ ...state, updating: true }));
     this.api
-      .updateMember(id, { email, ...this.state.updatedMember })
+      .updateMember(id, email, this.state.updatedMember)
       .then(() => this.props.onUpdate(this.state.updatedMember))
       .then(() => this.setState({ updating: false, updatedMember: {} }))
-      .then(
-        () => toast.success('Member updated successfully'),
-        () => toast.error('Error updating member')
-      );
+      .then(() => toast.success('Member updated successfully'))
+      .catch(error => {
+        toast.error('Error updating member');
+        console.log(error);
+      });
   }
 
   unsubscribeMember = e => {
@@ -109,7 +110,6 @@ export class MemberEdit extends Component<Props, *> {
                   placeholder="example@example.com"
                   defaultValue={member.email}
                   required
-                  disabled
                   title="Email edits are temporarily disabled"
                   onChange={({ target }) =>
                     this.onChange({ email: target.value })
