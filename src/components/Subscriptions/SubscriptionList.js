@@ -78,7 +78,7 @@ export class SubscriptionList extends Component<Props, State> {
       .cancelSubscription(subscription.provider, subscription.id)
       .then(
         result => {
-          toast.success('Subscription cancelled.');
+          toast.success('Payment cancelled.');
           const updated = Object.assign({}, subscription, {
             status: 'canceled',
           });
