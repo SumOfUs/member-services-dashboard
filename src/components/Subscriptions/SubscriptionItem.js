@@ -11,7 +11,7 @@ interface SubscriptionView {
   provider: 'braintree' | 'gocardless';
   amount: number;
   currency: string;
-  startDate: string;
+  createdAt: string;
   endDate?: string;
   // FIXME: canceled typo?
   status: 'active' | 'canceled' | 'cancelled';
@@ -85,7 +85,7 @@ export default class SubscriptionItem extends Component<Props, State> {
     return this.renderSubscription({
       id: s.id,
       provider: s.provider,
-      startDate: s.createdAt,
+      createdAt: s.createdAt,
       amount: s.amount,
       currency: s.currency,
       status: s.status,
@@ -96,7 +96,7 @@ export default class SubscriptionItem extends Component<Props, State> {
     return this.renderSubscription({
       id: s.id,
       provider: s.provider,
-      startDate: s.startDate,
+      createdAt: s.createdAt,
       amount: s.amount,
       currency: s.currency,
       status: s.status,
@@ -115,23 +115,23 @@ export default class SubscriptionItem extends Component<Props, State> {
           <div className="SubscriptionItem-status level-item">
             {this.renderStatusIcon(data.status)}
           </div>
+          <div className="SubscriptionItem-cancel level-item">
+            {data.status === 'active' && this.renderCancelButton()}
+          </div>
           <div className="SubscriptionItem-provider level-item is-hidden-mobile">
             {data.provider}
           </div>
           <div className="level-item">
-            <code>{data.id}</code>
-          </div>
-          <div className="level-item">
             {this.renderAmount(data.amount, data.currency)}
+          </div>
+          <div className="SubscriptionItem-date level-item has-text-right has-text-grey">
+            {this.renderDate(data.createdAt)}
           </div>
         </div>
 
         <div className="level-right">
-          <div className="SubscriptionItem-date level-item has-text-right has-text-grey">
-            {this.renderDate(data.startDate)}
-          </div>
-          <div className="SubscriptionItem-cancel level-item">
-            {data.status === 'active' && this.renderCancelButton()}
+          <div className="level-item">
+            <code>{data.id}</code>
           </div>
         </div>
       </div>
