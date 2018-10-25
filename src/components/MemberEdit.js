@@ -51,6 +51,20 @@ export class MemberEdit extends Component<Props, *> {
       });
   }
 
+  subjectAccessRequest = () => {
+    this.api
+      .subjectAccessRequest(this.props.member.email)
+      .then(() =>
+        toast.success(
+          'Subject access request submitted - check the inbox for info@sumofus.org'
+        )
+      )
+      .catch(error => {
+        toast.error('Error requesting subject access data');
+        console.log(error);
+      });
+  };
+
   unsubscribeMember = e => {
     e.preventDefault();
     this.setState({ unsubscribing: true });
@@ -203,6 +217,13 @@ export class MemberEdit extends Component<Props, *> {
               disabled={unsubscribing || !this.subscribed()}
             >
               Unsubscribe
+            </button>
+
+            <button
+              onClick={this.subjectAccessRequest}
+              className="button is-primary"
+            >
+              Submit subject access request
             </button>
           </div>
         </form>

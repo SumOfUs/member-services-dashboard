@@ -68,4 +68,10 @@ export default class ApiService {
         return response.data.objects;
       });
   }
+
+  subjectAccessRequest(email: string) {
+    return this.client
+      .post('/subject_access_request', { email: email })
+      .then(response => response.data.objects);
+  }
 }
