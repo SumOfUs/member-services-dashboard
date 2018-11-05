@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { toast } from 'react-toastify';
 import ApiService from '../libs/api-service';
 import SelectCountry from '../components/SelectCountry';
+import config from '../config';
 
 type Props = {
   token: string,
@@ -56,7 +57,9 @@ export class MemberEdit extends Component<Props, *> {
       .subjectAccessRequest(this.props.member.email)
       .then(() =>
         toast.success(
-          'Subject access request submitted - check the inbox for info@sumofus.org'
+          `Subject access request submitted - check the inbox for ${
+            config.member_services.EMAIL
+          }`
         )
       )
       .catch(error => {
