@@ -7,4 +7,7 @@ export default {
   api: {
     API_URL: process.env.REACT_APP_API_URL,
   },
+  member_services: {
+    EMAIL: process.env.REACT_APP_MEMBER_SERVICES_EMAIL,
+  },
 };
