@@ -68,6 +68,13 @@ export default class ApiService {
         return response.data.objects;
       });
   }
+  deleteMember(email: string) {
+    return this.client
+      .post('/members/delete', { email: email })
+      .then(response => {
+        return response.data.objects;
+      });
+  }
 
   subjectAccessRequest(email: string) {
     return this.client

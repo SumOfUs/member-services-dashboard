@@ -22,6 +22,8 @@ export class MemberEdit extends Component<Props, *> {
       unsubscribing: false,
       updatedMember: {},
       subscription_status: this.props.member.subscription_status,
+      showDelete: true,
+      deleting: false,
     };
   }
 
@@ -80,6 +82,7 @@ export class MemberEdit extends Component<Props, *> {
           this.setState({
             unsubscribing: false,
             subscription_status: 'unsubscribed',
+            showDelete: true,
           });
         },
         error => {
@@ -88,6 +91,31 @@ export class MemberEdit extends Component<Props, *> {
         }
       )
       .then(() => this.setState({ unsubscribing: false }));
+  };
+  deleteMember = e => {
+    if (window.confirm('Are you sure, you want to delete the member?')) {
+      e.preventDefault();
+      this.setState({ deleting: true });
+
+      this.api
+        .unsubscribeMember(this.props.member.email, this.props.member.lang)
+        .then(
+          success => {
+            toast.success('Member deleted successfully.');
+            this.setState({
+              deleting: false,
+              showDelete: false,
+            });
+          },
+          error => {
+            toast.error('There was an error deleting the member.');
+            console.log('Delete error:', error);
+          }
+        )
+        .then(() => this.setState({ deleting: false }));
+    } else {
+      return null;
+    }
   };
 
   onSubmit = event => {
@@ -113,7 +141,7 @@ export class MemberEdit extends Component<Props, *> {
 
   render() {
     const { member } = this.props;
-    const { updatedMember, updating, unsubscribing } = this.state;
+    const { updatedMember, updating, unsubscribing, deleting } = this.state;
 
     return (
       <div className="MemberEdit is-clearfix">
@@ -228,6 +256,18 @@ export class MemberEdit extends Component<Props, *> {
             >
               Submit subject access request
             </button>
+            {this.state.showDelete && (
+              <button
+                onClick={this.deleteMember}
+                className={classnames('button', {
+                  'is-danger': this.state.showDelete,
+                  'is-loading': deleting,
+                })}
+                disabled={deleting}
+              >
+                Delete
+              </button>
+            )}
           </div>
         </form>
       </div>
