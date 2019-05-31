@@ -22,8 +22,9 @@ export class MemberEdit extends Component<Props, *> {
       unsubscribing: false,
       updatedMember: {},
       subscription_status: this.props.member.subscription_status,
-      showDelete: true,
-      deleting: false,
+      showForget:
+        this.props.member.subscription_status === 'unsubscribed' ? true : false,
+      forgetting: false,
     };
   }
 
@@ -82,7 +83,7 @@ export class MemberEdit extends Component<Props, *> {
           this.setState({
             unsubscribing: false,
             subscription_status: 'unsubscribed',
-            showDelete: true,
+            showForget: true,
           });
         },
         error => {
@@ -92,31 +93,49 @@ export class MemberEdit extends Component<Props, *> {
       )
       .then(() => this.setState({ unsubscribing: false }));
   };
-  deleteMember = e => {
-    if (window.confirm('Are you sure, you want to delete the member?')) {
+  forgetMember = e => {
+    if (
+      window.confirm('Are you sure, you want to forget the member details?')
+    ) {
       e.preventDefault();
-      this.setState({ deleting: true });
-
-      this.api
-        .unsubscribeMember(this.props.member.email, this.props.member.lang)
-        .then(
-          success => {
-            toast.success('Member deleted successfully.');
+      this.setState({ forgetting: true });
+      const payload = {
+        email: this.props.member.email,
+      };
+      this.forgetMemberDetails(payload)
+        .then(data => {
+          if (data.error && data.error.status) {
             this.setState({
-              deleting: false,
-              showDelete: false,
+              forgetting: false,
             });
-          },
-          error => {
-            toast.error('There was an error deleting the member.');
-            console.log('Delete error:', error);
+            toast.error('There was an error anonymising the member data.');
+            console.log('Forget member error:', data.error);
+          } else {
+            toast.success('Member data anonymised successfully.');
+            setTimeout(function() {
+              window.location.reload();
+            }, 1000);
           }
-        )
-        .then(() => this.setState({ deleting: false }));
+        })
+        .catch(error => {
+          toast.error('There was an error anonymising the member data.');
+          console.log('Forget member error:', error);
+        });
     } else {
       return null;
     }
   };
+
+  forgetMemberDetails(data = {}) {
+    return fetch(`${config.api.SLS_API_URL}/members/forget`, {
+      method: 'POST',
+      headers: {
+        authorization: this.props.token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(response => response.json());
+  }
 
   onSubmit = event => {
     event.preventDefault();
@@ -141,7 +160,7 @@ export class MemberEdit extends Component<Props, *> {
 
   render() {
     const { member } = this.props;
-    const { updatedMember, updating, unsubscribing, deleting } = this.state;
+    const { updatedMember, updating, unsubscribing, forgetting } = this.state;
 
     return (
       <div className="MemberEdit is-clearfix">
@@ -256,16 +275,16 @@ export class MemberEdit extends Component<Props, *> {
             >
               Submit subject access request
             </button>
-            {this.state.showDelete && (
+            {this.state.showForget && (
               <button
-                onClick={this.deleteMember}
+                onClick={this.forgetMember}
                 className={classnames('button', {
-                  'is-danger': this.state.showDelete,
-                  'is-loading': deleting,
+                  'is-danger': this.state.showForget,
+                  'is-loading': forgetting,
                 })}
-                disabled={deleting}
+                disabled={forgetting}
               >
-                Delete
+                Forget member data
               </button>
             )}
           </div>
