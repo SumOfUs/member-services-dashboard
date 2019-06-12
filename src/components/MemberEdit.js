@@ -93,16 +93,15 @@ export class MemberEdit extends Component<Props, *> {
       )
       .then(() => this.setState({ unsubscribing: false }));
   };
+
   forgetMember = e => {
     if (
       window.confirm('Are you sure, you want to forget the member details?')
     ) {
       e.preventDefault();
       this.setState({ forgetting: true });
-      const payload = {
-        email: this.props.member.email,
-      };
-      this.forgetMemberDetails(payload)
+      this.api
+        .forgetMember(this.props.member.email)
         .then(data => {
           if (data.error && data.error.status) {
             this.setState({
@@ -125,17 +124,6 @@ export class MemberEdit extends Component<Props, *> {
       return null;
     }
   };
-
-  forgetMemberDetails(data = {}) {
-    return fetch(`${config.api.SLS_API_URL}/members/forget`, {
-      method: 'POST',
-      headers: {
-        authorization: this.props.token,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }).then(response => response.json());
-  }
 
   onSubmit = event => {
     event.preventDefault();
