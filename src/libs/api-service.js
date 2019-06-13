@@ -17,6 +17,10 @@ export default class ApiService {
 
   constructor(options = {}) {
     this.client = createClient(options);
+    this.slsClient = createClient({
+      ...options,
+      baseURL: config.api.SLS_API_URL,
+    });
   }
 
   updateToken(token) {
@@ -73,5 +77,11 @@ export default class ApiService {
     return this.client
       .post('/subject_access_request', { email: email })
       .then(response => response.data.objects);
+  }
+
+  forgetMember(email: string) {
+    return this.slsClient
+      .post('/members/forget', { email })
+      .then(response => response.data);
   }
 }

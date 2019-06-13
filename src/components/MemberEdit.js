@@ -22,6 +22,9 @@ export class MemberEdit extends Component<Props, *> {
       unsubscribing: false,
       updatedMember: {},
       subscription_status: this.props.member.subscription_status,
+      showForget:
+        this.props.member.subscription_status === 'unsubscribed' ? true : false,
+      forgetting: false,
     };
   }
 
@@ -80,6 +83,7 @@ export class MemberEdit extends Component<Props, *> {
           this.setState({
             unsubscribing: false,
             subscription_status: 'unsubscribed',
+            showForget: true,
           });
         },
         error => {
@@ -88,6 +92,37 @@ export class MemberEdit extends Component<Props, *> {
         }
       )
       .then(() => this.setState({ unsubscribing: false }));
+  };
+
+  forgetMember = e => {
+    if (
+      window.confirm('Are you sure, you want to forget the member details?')
+    ) {
+      e.preventDefault();
+      this.setState({ forgetting: true });
+      this.api
+        .forgetMember(this.props.member.email)
+        .then(data => {
+          if (data.error && data.error.status) {
+            this.setState({
+              forgetting: false,
+            });
+            toast.error('There was an error anonymising the member data.');
+            console.log('Forget member error:', data.error);
+          } else {
+            toast.success('Member data anonymised successfully.');
+            setTimeout(function() {
+              window.location.reload();
+            }, 1000);
+          }
+        })
+        .catch(error => {
+          toast.error('There was an error anonymising the member data.');
+          console.log('Forget member error:', error);
+        });
+    } else {
+      return null;
+    }
   };
 
   onSubmit = event => {
@@ -113,7 +148,7 @@ export class MemberEdit extends Component<Props, *> {
 
   render() {
     const { member } = this.props;
-    const { updatedMember, updating, unsubscribing } = this.state;
+    const { updatedMember, updating, unsubscribing, forgetting } = this.state;
 
     return (
       <div className="MemberEdit is-clearfix">
@@ -228,6 +263,18 @@ export class MemberEdit extends Component<Props, *> {
             >
               Submit subject access request
             </button>
+            {this.state.showForget && (
+              <button
+                onClick={this.forgetMember}
+                className={classnames('button', {
+                  'is-danger': this.state.showForget,
+                  'is-loading': forgetting,
+                })}
+                disabled={forgetting}
+              >
+                Forget member data
+              </button>
+            )}
           </div>
         </form>
       </div>
